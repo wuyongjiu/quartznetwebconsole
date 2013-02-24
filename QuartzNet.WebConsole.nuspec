@@ -6,9 +6,7 @@
         <title>QuartzNet.WebConsole</title>
         <authors>Valera Kolupaev</authors>
         <owners>Valera Kolupaev</owners>
-        <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
-        <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
-        <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+        <projectUrl>http://quartznetwebconsole.codeplex.com/</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Web console for Quartz.Net</description>
         <copyright>Copyright 2013</copyright>
@@ -26,5 +24,7 @@
     <files>
         <file src="QuartzNet.WebConsole\bin\Release\QuartzNet.WebConsole.dll" target="lib\net40\QuartzNet.WebConsole.dll" />
         <file src="QuartzNet.WebConsole\bin\Release\QuartzNet.WebConsole.pdb" target="lib\net40\QuartzNet.WebConsole.pdb" />
+        <file src="readme.txt" />
+        <file src="QuartzNet.WebConsole\**\*.cs" target="src" />
     </files>
 </package>
