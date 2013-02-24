@@ -1,0 +1,47 @@
+﻿@using QuartzNet.WebConsole.VewModels.QuartzConsole
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+    <head>
+        <title>Quartz - @Model.Machine</title>
+        <script type="text/javascript" src="/Content/js/jquery.js"> </script>
+        <script type="text/javascript" src="/Content/js/bootstrap.js"> </script>
+        <link rel="stylesheet" type="text/css" href="/Content/css/bootstrap.css">
+    </head>
+    <body>
+        <div class="container">
+            <table class="table table-bordered">
+                <caption>Quartz - @Model.Machine Job statuses</caption>
+                <thead>
+                    <tr>
+                        <th>Job key</th>
+                        <th>Last run</th>
+                        <th>Next run</th>
+                        <th>IsRunning</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (JobGroupViewModel g in Model.Groups)
+                    {
+                        @foreach (var i in g.JobDetails)
+                        {
+                            <tr>
+                                <td>@i.JobKey</td>
+                                <td>@i.LastRun</td>
+                                <td>@i.NextScheduledRun</td>
+                                <td>@i.IsRunning</td>
+                                <td>
+                                    <form method="POST"
+                                          action="@string.Format("quartzconsole/trigger/{0}/{1}/", i.SchedulerName, i.JobKey)">
+                                        <input type="submit" value="Trigger"/>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
