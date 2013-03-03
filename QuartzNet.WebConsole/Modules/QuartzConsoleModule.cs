@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nancy;
-using Nancy.Helpers;
 using Quartz;
 using Quartz.Impl.Matchers;
 using QuartzNet.WebConsole.VewModels.QuartzConsole;
@@ -13,47 +12,6 @@ using QuartzNet.WebConsole.VewModels.QuartzConsole;
 
 namespace QuartzNet.WebConsole.Modules
 {
-    public class UserZoneService
-    {
-        private readonly NancyModule _module;
-
-        public UserZoneService(NancyModule module)
-        {
-            _module = module;
-        }
-
-        public TimeZoneInfo GetUserTimeZone()
-        {
-            if (!_module.Request.Cookies.ContainsKey("time-zone"))
-                return TimeZoneInfo.FindSystemTimeZoneById(TimeZone.CurrentTimeZone.StandardName);
-            var timeZoneId = HttpUtility.UrlDecode(_module.Request.Cookies["time-zone"]);
-            try
-            {
-                return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-            }
-            catch (Exception)
-            {
-                return TimeZoneInfo.FindSystemTimeZoneById(TimeZone.CurrentTimeZone.StandardName);
-            }
-        }
-
-        public DateTimeOffset? ToUser(DateTimeOffset? dateTimeOffset)
-        {
-            if (!dateTimeOffset.HasValue)
-                return null;
-            return ToUser(dateTimeOffset.Value);
-        }
-        public DateTimeOffset ToUser(DateTimeOffset dateTimeOffset)
-        {
-            return TimeZoneInfo.ConvertTime(dateTimeOffset, GetUserTimeZone());
-        }
-
-        public DateTimeOffset FromUser(DateTime fromUnixTimestamp)
-        {
-            return TimeZoneInfo.ConvertTimeToUtc(fromUnixTimestamp, GetUserTimeZone());
-        }
-    }
-
     public sealed class QuartzConsoleModule : NancyModule
     {
         private readonly UserZoneService _timeZoneService;
@@ -144,6 +102,10 @@ namespace QuartzNet.WebConsole.Modules
                     })));
 
                     return Response.AsJson(lst);
+                };
+            Post["/setTimezone"] = p =>
+                {
+                    return Response.AsRedirect(Request.Headers.Referrer).AddCookie(_timeZoneService.GetCookieFor((string)Request.Form.timezone));
                 };
 
         }

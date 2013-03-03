@@ -10,16 +10,8 @@
     @RenderSection("head", false)
     <script type="text/javascript">
         $(function () {
-            function setCookie(cName, value, exdays) {
-                var exdate = new Date();
-                exdate.setDate(exdate.getDate() + exdays);
-                var cValue = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
-                document.cookie = cName + "=" + cValue;
-            }
             $("#time-zones").change(function () {
-                var zone = $("#time-zones").val();
-                setCookie("time-zone", zone);
-                window.location = window.location;
+                $("#time-zones").parent("form").submit();
             });
         });
     </script>
@@ -31,9 +23,10 @@
                 <a href="/quartzconsole">Jobs</a>
                 <a href="/quartzconsole/schedule">Schedule</a>
             </div>
-            <div class="span4 offset6 form-inline">
-                <label for="time-zones">Timezones:</label>
-                    <select id="time-zones">
+            <div class="span4 offset6">
+                <form class="form-inline" action="/quartzconsole/setTimezone" method="POST">
+                    <label for="time-zones">Timezones:</label>
+                    <select id="time-zones" name="timezone">
                         @foreach (Tuple<string, string> zone in (Tuple<string, string>[])ViewBag.timezones.Value)
                         {
                             if (zone.Item1 == ViewBag.selectedZone.Value)
@@ -46,7 +39,8 @@
                             }
                         }
                     </select>
-                </div>
+                </form>
+            </div>
         </div>
         @RenderBody()
     </div>
