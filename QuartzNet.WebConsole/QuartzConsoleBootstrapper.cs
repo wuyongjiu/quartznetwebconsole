@@ -7,6 +7,7 @@ using Common.Logging;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Conventions;
+using Nancy.Diagnostics;
 using Nancy.Hosting.Self;
 using Nancy.Json;
 using Nancy.TinyIoc;
@@ -49,6 +50,7 @@ namespace QuartzNet.WebConsole
                 .Add(QuartzAssembly, typeof (ViewsPointer).Namespace);
 
             JsonSettings.MaxJsonLength = int.MaxValue;
+            StaticConfiguration.EnableRequestTracing = true;
         }
 
         protected override NancyInternalConfiguration InternalConfiguration
@@ -74,6 +76,11 @@ namespace QuartzNet.WebConsole
             base.ConfigureConventions(nancyConventions);
             nancyConventions.StaticContentsConventions.Add(
                 EmbeddedStaticContentConventionBuilder.AddDirectory("/Content", QuartzAssembly));
+        }
+
+        protected override DiagnosticsConfiguration DiagnosticsConfiguration
+        {
+            get { return new DiagnosticsConfiguration(){Password = "quartz", CookieName = "diag_auth"}; }
         }
     }
 }

@@ -1,15 +1,14 @@
 ﻿@using QuartzNet.WebConsole.VewModels.QuartzConsole
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Quartz</title>
-    <script type="text/javascript" src="/Content/js/jquery.js"> </script>
-    <script type="text/javascript" src="/Content/js/jquery-ui-1.10.1.custom.js"> </script>
-    <script type="text/javascript" src="/Content/js/bootstrap.js"> </script>
 
+@{
+    Layout = "Shared/_layout.cshtml";
+    ViewBag.title = "Job schedule";
+}
+@section head
+{
+    <script type="text/javascript" src="/Content/js/jquery-ui-1.10.1.custom.js"> </script>
     <script type="text/javascript" src="/Content/js/fullcalendar.min.js"> </script>
     <link rel="stylesheet" type="text/css" href="/Content/css/fullcalendar.css">
-    <link rel="stylesheet" type="text/css" href="/Content/css/bootstrap.css">
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -64,23 +63,19 @@
             right: 5px;
         }
     </style>
-</head>
-<body>
 
-    <div class="container">
-        <div class="row">
-            <div id='loading' style='display: none'>loading...</div>
-            <div class="jobs span2">
-                <h3>Jobs</h3>
-                @foreach (string jobKey in Model.jobs)
-                {
-                    <label>
-                        <input type="checkbox" class="job-selection" name="job-selection" checked="checked" data-key="@jobKey" value="@jobKey"/>@jobKey</label>
-                }
-            </div>
-            <div id="calendar" class="span7">
-            </div>
-        </div>
+}
+<div class="row">
+    <div id='loading' style='display: none'>loading...</div>
+    <div class="jobs span2">
+        <h3>Jobs</h3>
+        @foreach (string jobKey in Model.jobs)
+        {
+            <label>
+                <input type="checkbox" class="job-selection" name="job-selection" checked="checked" data-key="@jobKey" value="@jobKey"/>@jobKey</label>
+        }
     </div>
-</body>
-</html>
+    <div id="calendar" class="span7">
+    </div>
+</div>
+    

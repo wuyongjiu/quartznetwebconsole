@@ -19,7 +19,10 @@ namespace QuartzNet.WebConsole.Modules
         {
             var schedFact = QuartzConsoleBootstrapper.Factory;
 
-
+            After.AddItemToEndOfPipeline(ctx =>
+                {
+                    ViewBag.machineName = Environment.MachineName;
+                });
             Get[""] = (p) =>
                 {
                     var m = new JobListViewModel
@@ -70,13 +73,13 @@ namespace QuartzNet.WebConsole.Modules
                         select jobKey.ToString()
                         ).ToList();
 
-                    return View["Schedule", new {jobs}];
+                    return View["Schedule", new { jobs }];
                 };
             Post["/ScheduleJson"] = p =>
                 {
                     var start = FromUnixTimestamp((long)Request.Form.start);
                     var end = FromUnixTimestamp((long)Request.Form.end);
-                    var activeJobKeys = ((string)Request.Form["activeJobs[]"]??"").Split(',');
+                    var activeJobKeys = ((string)Request.Form["activeJobs[]"] ?? "").Split(',');
                     var triggers = (
                                        from sched in schedFact.AllSchedulers
                                        from triggerGroup in sched.GetTriggerGroupNames()
@@ -89,7 +92,7 @@ namespace QuartzNet.WebConsole.Modules
                     lst.AddRange(triggers.SelectMany(trigger => GetAllTimes(trigger, start, end).Select(t => new
                     {
                         start = t.ToString("yyyy-MM-dd hh:mm:ss"),
-                        title = trigger.JobKey.ToString(), 
+                        title = trigger.JobKey.ToString(),
                         allDay = false
                     })));
 
