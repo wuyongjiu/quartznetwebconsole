@@ -65,6 +65,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessControl\AclRule.cs" />
+    <Compile Include="AccessControl\AclListBuilder.cs" />
     <Compile Include="EmbeddedStaticContentConventionBuilder.cs" />
     <Compile Include="VewModels\QuartzConsole\JobGroupViewModel.cs" />
     <Compile Include="VewModels\QuartzConsole\JobViewModel.cs" />
