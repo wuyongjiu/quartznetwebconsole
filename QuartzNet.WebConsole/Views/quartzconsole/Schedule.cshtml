@@ -51,6 +51,16 @@
                 calendar.fullCalendar('refetchEvents');
             });
             $(".job-selection").button();
+            $("#job-selection-all").click(function() {
+                $(".job-selection").prop("checked", "checked");
+                eventSoruce.data.activeJobs = getActivenJobs();
+                calendar.fullCalendar('refetchEvents');
+            });
+            $("#job-selection-none").click(function () {
+                $(".job-selection").prop("checked", false);
+                eventSoruce.data.activeJobs = getActivenJobs();
+                calendar.fullCalendar('refetchEvents');
+            });
 
         });
 
@@ -69,6 +79,8 @@
     <div id='loading' style='display: none'>loading...</div>
     <div class="jobs span2">
         <h3>Jobs</h3>
+        <a href="#" id="job-selection-all">All</a>
+        <a href="#" id="job-selection-none">None</a>
         @foreach (string jobKey in Model.jobs)
         {
             <label>
