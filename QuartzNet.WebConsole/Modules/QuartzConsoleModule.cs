@@ -105,7 +105,7 @@ namespace QuartzNet.WebConsole.Modules
             while (true)
             {
                 time = trigger.GetFireTimeAfter(time);
-                if (time > end)
+                if (!time.HasValue || time > end)
                     break;
                 yield return time.Value;
             }
@@ -114,8 +114,7 @@ namespace QuartzNet.WebConsole.Modules
 
         DateTime FromUnixTimestamp(long timestamp)
         {
-            DateTime unixRef = new DateTime(1970, 1, 1, 0, 0, 0);
-            return unixRef.AddSeconds(timestamp);
+            return new DateTime(1970, 1, 1, 0, 0, 0).AddSeconds(timestamp);
         }
 
 
