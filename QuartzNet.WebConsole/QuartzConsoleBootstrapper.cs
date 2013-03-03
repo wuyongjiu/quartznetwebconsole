@@ -77,10 +77,5 @@ namespace QuartzNet.WebConsole
             nancyConventions.StaticContentsConventions.Add(
                 EmbeddedStaticContentConventionBuilder.AddDirectory("/Content", QuartzAssembly));
         }
-
-        protected override DiagnosticsConfiguration DiagnosticsConfiguration
-        {
-            get { return new DiagnosticsConfiguration(){Password = "quartz", CookieName = "diag_auth"}; }
-        }
     }
 }
