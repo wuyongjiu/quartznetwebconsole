@@ -27,7 +27,14 @@ namespace QuartzNet.WebConsole.Modules
             if (!_module.Request.Cookies.ContainsKey("time-zone"))
                 return TimeZoneInfo.FindSystemTimeZoneById(TimeZone.CurrentTimeZone.StandardName);
             var timeZoneId = HttpUtility.UrlDecode(_module.Request.Cookies["time-zone"]);
-            return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            try
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            }
+            catch (Exception)
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(TimeZone.CurrentTimeZone.StandardName);
+            }
         }
 
         public DateTimeOffset? ToUser(DateTimeOffset? dateTimeOffset)
