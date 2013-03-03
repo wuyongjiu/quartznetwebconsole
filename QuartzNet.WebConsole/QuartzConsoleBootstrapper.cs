@@ -8,6 +8,7 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Conventions;
 using Nancy.Hosting.Self;
+using Nancy.Json;
 using Nancy.TinyIoc;
 using Nancy.ViewEngines;
 using Nancy.ViewEngines.Razor;
@@ -46,6 +47,8 @@ namespace QuartzNet.WebConsole
             ResourceViewLocationProvider
                 .RootNamespaces
                 .Add(QuartzAssembly, typeof (ViewsPointer).Namespace);
+
+            JsonSettings.MaxJsonLength = int.MaxValue;
         }
 
         protected override NancyInternalConfiguration InternalConfiguration

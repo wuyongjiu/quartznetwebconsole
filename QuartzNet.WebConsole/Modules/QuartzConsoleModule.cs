@@ -45,9 +45,9 @@ namespace QuartzNet.WebConsole.Modules
                 };
             Post["/trigger/{schedKey}/{jobKey}"] = p =>
                 {
-                    var scheduler = schedFact.GetScheduler((string) p.schedKey);
+                    var scheduler = schedFact.GetScheduler((string)p.schedKey);
                     JobKey key = null;
-                    var keyStr = ((string) p.jobKey);
+                    var keyStr = ((string)p.jobKey);
                     if (keyStr.Contains("."))
                     {
                         var keyArr = keyStr.Split('.');
@@ -61,7 +61,64 @@ namespace QuartzNet.WebConsole.Modules
                     scheduler.TriggerJob(key);
                     return Response.AsRedirect("/quartzconsole");
                 };
+            Get["/schedule"] = p =>
+                {
+                    var jobs = (
+                        from sched in schedFact.AllSchedulers
+                        from jobGroup in sched.GetJobGroupNames()
+                        from jobKey in sched.GetJobKeys(GroupMatcher<JobKey>.GroupContains(jobGroup))
+                        select jobKey.ToString()
+                        ).ToList();
+
+                    return View["Schedule", new {jobs}];
+                };
+            Post["/ScheduleJson"] = p =>
+                {
+                    var start = FromUnixTimestamp((long)Request.Form.start);
+                    var end = FromUnixTimestamp((long)Request.Form.end);
+                    var activeJobKeys = ((string)Request.Form["activeJobs[]"]??"").Split(',');
+                    var triggers = (
+                                       from sched in schedFact.AllSchedulers
+                                       from triggerGroup in sched.GetTriggerGroupNames()
+                                       from triggerKey in sched.GetTriggerKeys(GroupMatcher<TriggerKey>.GroupContains(triggerGroup))
+                                       let trig = sched.GetTrigger(triggerKey)
+                                       join ajk in activeJobKeys on trig.JobKey.ToString() equals ajk
+                                       select trig
+                                       ).ToList();
+                    var lst = new List<object>();
+                    lst.AddRange(triggers.SelectMany(trigger => GetAllTimes(trigger, start, end).Select(t => new
+                    {
+                        start = t.ToString("yyyy-MM-dd hh:mm:ss"),
+                        title = trigger.JobKey.ToString(), 
+                        allDay = false
+                    })));
+
+                    return Response.AsJson(lst);
+                };
+
         }
+
+        private IEnumerable<DateTimeOffset> GetAllTimes(ITrigger trigger, DateTime startTime, DateTime end)
+        {
+            var start = startTime;
+            DateTimeOffset? time = start;
+            while (true)
+            {
+                time = trigger.GetFireTimeAfter(time);
+                if (time > end)
+                    break;
+                yield return time.Value;
+            }
+
+        }
+
+        DateTime FromUnixTimestamp(long timestamp)
+        {
+            DateTime unixRef = new DateTime(1970, 1, 1, 0, 0, 0);
+            return unixRef.AddSeconds(timestamp);
+        }
+
+
 
         private JobViewModel CreateJobInfo(IJobDetail job, IScheduler scheduler, ISet<JobKey> runningJobs)
         {

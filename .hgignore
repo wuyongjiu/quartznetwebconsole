@@ -3,3 +3,6 @@ syntax: glob
 **\obj\*
 packages/**
 QuartzNet.WebConsole.1.0.0.0.nupkg
+**\*.nupkg
+QuartzNet.WebConsole.v11.suo
+QuartzNet.WebConsole.1.0.0.0.symbols.nupkg
