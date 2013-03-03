@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>QuartzNet.WebConsole</id>
-        <version>1.0.0.0</version>
+        <version>1.0.1.0</version>
         <title>QuartzNet.WebConsole</title>
         <authors>Valera Kolupaev</authors>
         <owners>Valera Kolupaev</owners>
@@ -11,6 +11,10 @@
         <description>Web console for Quartz.Net</description>
         <copyright>Copyright 2013</copyright>
         <tags>QuartzNet Quartz.Net Quartz</tags>
+        <releaseNotes>
+            * Added support for timezones
+            * Added screen with schedule view
+        </releaseNotes>
         <dependencies>
             <dependency id="Common.Logging" version="2.1.2" />
             <dependency id="Nancy" version="0.16.1" />
