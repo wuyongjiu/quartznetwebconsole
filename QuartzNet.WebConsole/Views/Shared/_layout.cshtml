@@ -1,22 +1,56 @@
-﻿@using QuartzNet.WebConsole.VewModels.QuartzConsole
+﻿@using System
+@using QuartzNet.WebConsole.VewModels.QuartzConsole
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Quartz - @ViewBag.machineName @ViewBag.title</title>
-        <script type="text/javascript" src="/Content/js/jquery.js"> </script>
-        <script type="text/javascript" src="/Content/js/bootstrap.js"> </script>
-        <link rel="stylesheet" type="text/css" href="/Content/css/bootstrap.css">
-        @RenderSection("head", false)
-    </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="span4 offset5">
-                    <a href="/quartzconsole">Jobs</a>
-                    <a href="/quartzconsole/schedule">Schedule</a>
-                </div>
+<head>
+    <title>Quartz - @ViewBag.machineName @ViewBag.title</title>
+    <script type="text/javascript" src="/Content/js/jquery.js"> </script>
+    <script type="text/javascript" src="/Content/js/bootstrap.js"> </script>
+    <link rel="stylesheet" type="text/css" href="/Content/css/bootstrap.css">
+    @RenderSection("head", false)
+    <script type="text/javascript">
+        $(function () {
+            function setCookie(cName, value, exdays) {
+                var exdate = new Date();
+                exdate.setDate(exdate.getDate() + exdays);
+                var cValue = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+                document.cookie = cName + "=" + cValue;
+            }
+            $("#time-zones").change(function() {
+                var zone = $("#time-zones").val();
+                setCookie("time-zone", zone);
+                window.location = window.location;
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="span2">
+                <a href="/quartzconsole">Jobs</a>
+                <a href="/quartzconsole/schedule">Schedule</a>
             </div>
-            @RenderBody()
+            <div class="span4 offset6">
+                <label>
+                    Timezones:
+                    <select id="time-zones">
+                        @foreach (Tuple<string, string> zone in (Tuple<string, string>[])ViewBag.timezones.Value)
+                        {
+                            if (zone.Item1 == ViewBag.selectedZone.Value)
+                            {
+                            <option value="@zone.Item1" selected="selected">@zone.Item2</option>
+                            }
+                            else
+                            {
+                            <option value="@zone.Item1">@zone.Item2</option>
+                            }
+                        }
+                    </select>
+                </label>
+            </div>
         </div>
-    </body>
+        @RenderBody()
+    </div>
+</body>
 </html>

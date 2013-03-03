@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Reflection;
 using Common.Logging;
 using Nancy;
+using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
 using Nancy.Conventions;
 using Nancy.Diagnostics;
@@ -76,6 +77,10 @@ namespace QuartzNet.WebConsole
             base.ConfigureConventions(nancyConventions);
             nancyConventions.StaticContentsConventions.Add(
                 EmbeddedStaticContentConventionBuilder.AddDirectory("/Content", QuartzAssembly));
+        }
+          protected override DiagnosticsConfiguration DiagnosticsConfiguration
+        {
+            get { return new DiagnosticsConfiguration(){Password = "quartz"}; }
         }
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nancy;
+using Nancy.Helpers;
 using Quartz;
 using Quartz.Impl.Matchers;
 using QuartzNet.WebConsole.VewModels.QuartzConsole;
@@ -12,16 +13,55 @@ using QuartzNet.WebConsole.VewModels.QuartzConsole;
 
 namespace QuartzNet.WebConsole.Modules
 {
-    public class QuartzConsoleModule : NancyModule
+    public class UserZoneService
     {
+        private readonly NancyModule _module;
+
+        public UserZoneService(NancyModule module)
+        {
+            _module = module;
+        }
+
+        public TimeZoneInfo GetUserTimeZone()
+        {
+            if (!_module.Request.Cookies.ContainsKey("time-zone"))
+                return TimeZoneInfo.FindSystemTimeZoneById(TimeZone.CurrentTimeZone.StandardName);
+            var timeZoneId = HttpUtility.UrlDecode(_module.Request.Cookies["time-zone"]);
+            return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+        }
+
+        public DateTimeOffset? ToUser(DateTimeOffset? dateTimeOffset)
+        {
+            if (!dateTimeOffset.HasValue)
+                return null;
+            return ToUser(dateTimeOffset.Value);
+        }
+        public DateTimeOffset ToUser(DateTimeOffset dateTimeOffset)
+        {
+            return TimeZoneInfo.ConvertTime(dateTimeOffset, GetUserTimeZone());
+        }
+
+        public DateTimeOffset FromUser(DateTime fromUnixTimestamp)
+        {
+            return TimeZoneInfo.ConvertTimeToUtc(fromUnixTimestamp, GetUserTimeZone());
+        }
+    }
+
+    public sealed class QuartzConsoleModule : NancyModule
+    {
+        private readonly UserZoneService _timeZoneService;
+
         public QuartzConsoleModule()
             : base("/quartzconsole")
         {
+            _timeZoneService = new UserZoneService(this);
             var schedFact = QuartzConsoleBootstrapper.Factory;
 
             After.AddItemToEndOfPipeline(ctx =>
                 {
                     ViewBag.machineName = Environment.MachineName;
+                    ViewBag.timezones = System.TimeZoneInfo.GetSystemTimeZones().Select(q => Tuple.Create(q.Id, q.DisplayName)).ToArray();
+                    ViewBag.selectedZone = _timeZoneService.GetUserTimeZone().Id;
                 });
             Get[""] = (p) =>
                 {
@@ -77,8 +117,8 @@ namespace QuartzNet.WebConsole.Modules
                 };
             Post["/ScheduleJson"] = p =>
                 {
-                    var start = FromUnixTimestamp((long)Request.Form.start);
-                    var end = FromUnixTimestamp((long)Request.Form.end);
+                    var start = _timeZoneService.FromUser(FromUnixTimestamp((long)Request.Form.start));
+                    var end = _timeZoneService.FromUser(FromUnixTimestamp((long)Request.Form.end));
                     var activeJobKeys = ((string)Request.Form["activeJobs[]"] ?? "").Split(',');
                     var triggers = (
                                        from sched in schedFact.AllSchedulers
@@ -91,7 +131,7 @@ namespace QuartzNet.WebConsole.Modules
                     var lst = new List<object>();
                     lst.AddRange(triggers.SelectMany(trigger => GetAllTimes(trigger, start, end).Select(t => new
                     {
-                        start = t.ToString("yyyy-MM-dd hh:mm:ss"),
+                        start = _timeZoneService.ToUser(t).ToString("yyyy-MM-dd hh:mm:ss"),
                         title = trigger.JobKey.ToString(),
                         allDay = false
                     })));
@@ -101,7 +141,7 @@ namespace QuartzNet.WebConsole.Modules
 
         }
 
-        private IEnumerable<DateTimeOffset> GetAllTimes(ITrigger trigger, DateTime startTime, DateTime end)
+        private IEnumerable<DateTimeOffset> GetAllTimes(ITrigger trigger, DateTimeOffset startTime, DateTimeOffset end)
         {
             var start = startTime;
             DateTimeOffset? time = start;
@@ -125,8 +165,8 @@ namespace QuartzNet.WebConsole.Modules
         private JobViewModel CreateJobInfo(IJobDetail job, IScheduler scheduler, ISet<JobKey> runningJobs)
         {
             var triggersOfJob = scheduler.GetTriggersOfJob(job.Key);
-            var nextRun = triggersOfJob.DefaultIfEmpty().Min(q => q.GetNextFireTimeUtc());
-            var lastRun = triggersOfJob.DefaultIfEmpty().Max(q => q.GetPreviousFireTimeUtc());
+            var nextRun = _timeZoneService.ToUser(triggersOfJob.DefaultIfEmpty().Min(q => q.GetNextFireTimeUtc()));
+            var lastRun = _timeZoneService.ToUser(triggersOfJob.DefaultIfEmpty().Max(q => q.GetPreviousFireTimeUtc()));
             return new JobViewModel
                 {
                     SchedulerName = scheduler.SchedulerName,
