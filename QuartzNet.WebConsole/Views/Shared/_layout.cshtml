@@ -16,7 +16,7 @@
                 var cValue = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
                 document.cookie = cName + "=" + cValue;
             }
-            $("#time-zones").change(function() {
+            $("#time-zones").change(function () {
                 var zone = $("#time-zones").val();
                 setCookie("time-zone", zone);
                 window.location = window.location;
@@ -31,9 +31,8 @@
                 <a href="/quartzconsole">Jobs</a>
                 <a href="/quartzconsole/schedule">Schedule</a>
             </div>
-            <div class="span4 offset6">
-                <label>
-                    Timezones:
+            <div class="span4 offset6 form-inline">
+                <label for="time-zones">Timezones:</label>
                     <select id="time-zones">
                         @foreach (Tuple<string, string> zone in (Tuple<string, string>[])ViewBag.timezones.Value)
                         {
@@ -47,8 +46,7 @@
                             }
                         }
                     </select>
-                </label>
-            </div>
+                </div>
         </div>
         @RenderBody()
     </div>

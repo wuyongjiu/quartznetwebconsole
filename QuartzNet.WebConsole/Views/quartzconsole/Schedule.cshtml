@@ -83,7 +83,7 @@
         <a href="#" id="job-selection-none">None</a>
         @foreach (string jobKey in Model.jobs)
         {
-            <label>
+            <label class="checkbox">
                 <input type="checkbox" class="job-selection" name="job-selection" checked="checked" data-key="@jobKey" value="@jobKey"/>@jobKey</label>
         }
     </div>
