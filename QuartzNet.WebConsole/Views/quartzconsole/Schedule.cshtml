@@ -1,5 +1,5 @@
 ﻿@using QuartzNet.WebConsole.VewModels.QuartzConsole
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE html>
 <html>
 <head>
     <title>Quartz</title>
@@ -51,7 +51,7 @@
                 eventSoruce.data.activeJobs = getActivenJobs();
                 calendar.fullCalendar('refetchEvents');
             });
-            
+            $(".job-selection").button();
 
         });
 
@@ -71,10 +71,12 @@
         <div class="row">
             <div id='loading' style='display: none'>loading...</div>
             <div class="jobs span2">
-                    @foreach (string jobKey in Model.jobs)
-                    {
-                        <input type="checkbox" class="job-selection" checked="checked" data-key="@jobKey" value="@jobKey"><label>@jobKey</label></input>
-                    }
+                <h3>Jobs</h3>
+                @foreach (string jobKey in Model.jobs)
+                {
+                    <label>
+                        <input type="checkbox" class="job-selection" name="job-selection" checked="checked" data-key="@jobKey" value="@jobKey"/>@jobKey</label>
+                }
             </div>
             <div id="calendar" class="span7">
             </div>
