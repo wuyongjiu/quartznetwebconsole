@@ -1,5 +1,6 @@
 ﻿@using System
 @using QuartzNet.WebConsole.VewModels.QuartzConsole
+@using QuartzNet.WebConsole.Views
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +29,7 @@
             </div>
             <div class="span4 offset6">
                 <form class="form-inline" action="@Url.Content("~/quartzconsole/setTimezone")" method="POST">
-                    <label for="time-zones">Timezones:</label>
+                    <label for="time-zones">Timezone:</label>
                     <select id="time-zones" name="timezone">
                         @foreach (Tuple<string, string> zone in (Tuple<string, string>[])ViewBag.timezones.Value)
                         {
