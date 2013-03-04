@@ -22,8 +22,8 @@
             <div class="span2">
                 <ul class="nav nav-pills">
                     
-                    <li><a href="@Url.Content("~/quartzconsole")">Jobs</a></li>
-                    <li><a href="@Url.Content("~/quartzconsole/schedule")">Schedule</a></li>
+                    <li class="@Url.IsActive("~/quartzconsole/index", "active")"><a href="@Url.Content("~/quartzconsole/index")">Jobs</a></li>
+                    <li class="@Url.IsActive("~/quartzconsole/schedule", "active")"><a href="@Url.Content("~/quartzconsole/schedule")">Schedule</a></li>
                 </ul>
             </div>
             <div class="span4 offset6">

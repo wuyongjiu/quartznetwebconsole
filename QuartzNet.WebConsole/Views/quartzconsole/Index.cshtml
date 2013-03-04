@@ -26,11 +26,12 @@
                     <td>@i.IsRunning</td>
                     <td>
                         <form method="POST" class="form-inline"
-                                action="@Url.Content(string.Format("~/quartzconsole/trigger/{0}/{1}/", i.SchedulerName, i.JobKey))">
+                              action="@Url.Content(string.Format("~/quartzconsole/trigger/{0}/{1}/", i.SchedulerName, i.JobKey))">
                             <input type="submit" class="btn" value="Trigger"/>
                         </form>
                     </td>
                 </tr>
+                
             }
         }
 
