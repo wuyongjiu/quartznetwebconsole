@@ -99,7 +99,7 @@ namespace QuartzNet.WebConsole.Modules
                     var lst = new List<object>();
                     lst.AddRange(triggers.SelectMany(trigger => GetAllTimes(trigger, start, end).Select(t => new
                         {
-                            start = _timeZoneService.ToUser(t).ToString("yyyy-MM-dd hh:mm:ss"),
+                            start = _timeZoneService.ToUser(t).ToString("yyyy-MM-dd HH:mm:ss"),
                             title = trigger.JobKey.ToString(),
                             allDay = false
                         })));
