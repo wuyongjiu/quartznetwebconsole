@@ -25,9 +25,9 @@
                     <td>@i.NextScheduledRun</td>
                     <td>@i.IsRunning</td>
                     <td>
-                        <form method="POST"
-                                action="@string.Format("quartzconsole/trigger/{0}/{1}/", i.SchedulerName, i.JobKey)">
-                            <input type="submit" value="Trigger"/>
+                        <form method="POST" class="form-inline"
+                                action="@Url.Content(string.Format("~/quartzconsole/trigger/{0}/{1}/", i.SchedulerName, i.JobKey))">
+                            <input type="submit" class="btn" value="Trigger"/>
                         </form>
                     </td>
                 </tr>

@@ -6,9 +6,9 @@
 }
 @section head
 {
-    <script type="text/javascript" src="/Content/js/jquery-ui-1.10.1.custom.js"> </script>
-    <script type="text/javascript" src="/Content/js/fullcalendar.min.js"> </script>
-    <link rel="stylesheet" type="text/css" href="/Content/css/fullcalendar.css">
+    <script type="text/javascript" src="@Url.Content("~/Content/js/jquery-ui-1.10.1.custom.js")"> </script>
+    <script type="text/javascript" src="@Url.Content("~/Content/js/fullcalendar.min.js")"> </script>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/fullcalendar.css")">
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -22,7 +22,7 @@
             }
 
             var eventSoruce = {
-                url: '/quartzconsole/ScheduleJson',
+                url: '@Url.Content("~/quartzconsole/ScheduleJson")',
                 type: 'POST',
                 data: {
                     activeJobs: getActivenJobs()

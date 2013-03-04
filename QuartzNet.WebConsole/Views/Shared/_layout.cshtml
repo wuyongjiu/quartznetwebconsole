@@ -4,9 +4,9 @@
 <html>
 <head>
     <title>Quartz - @ViewBag.machineName @ViewBag.title</title>
-    <script type="text/javascript" src="/Content/js/jquery.js"> </script>
-    <script type="text/javascript" src="/Content/js/bootstrap.js"> </script>
-    <link rel="stylesheet" type="text/css" href="/Content/css/bootstrap.css">
+    <script type="text/javascript" src="@Url.Content("~/Content/js/jquery.js")"> </script>
+    <script type="text/javascript" src="@Url.Content("~/Content/js/bootstrap.js")"> </script>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/bootstrap.css")">
     @RenderSection("head", false)
     <script type="text/javascript">
         $(function () {
@@ -21,12 +21,13 @@
         <div class="row">
             <div class="span2">
                 <ul class="nav nav-pills">
-                    <li><a href="/quartzconsole">Jobs</a></li>
-                    <li><a href="/quartzconsole/schedule">Schedule</a></li>
+                    
+                    <li><a href="@Url.Content("~/quartzconsole")">Jobs</a></li>
+                    <li><a href="@Url.Content("~/quartzconsole/schedule")">Schedule</a></li>
                 </ul>
             </div>
             <div class="span4 offset6">
-                <form class="form-inline" action="/quartzconsole/setTimezone" method="POST">
+                <form class="form-inline" action="@Url.Content("~/quartzconsole/setTimezone")" method="POST">
                     <label for="time-zones">Timezones:</label>
                     <select id="time-zones" name="timezone">
                         @foreach (Tuple<string, string> zone in (Tuple<string, string>[])ViewBag.timezones.Value)
