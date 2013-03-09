@@ -52,7 +52,7 @@
             });
             $(".job-selection").button();
             $("#job-selection-all").click(function() {
-                $(".job-selection").prop("checked", "checked");
+                $(".job-selection[data-ignored=false]").prop("checked", "checked");
                 eventSoruce.data.activeJobs = getActivenJobs();
                 calendar.fullCalendar('refetchEvents');
             });
@@ -84,7 +84,15 @@
         @foreach (string jobKey in Model.jobs)
         {
             <label class="checkbox">
-                <input type="checkbox" class="job-selection" name="job-selection" checked="checked" data-key="@jobKey" value="@jobKey"/>@jobKey</label>
+                @if (Model.ignoredSchedules.Contains(@jobKey))
+                {
+                    <input type="checkbox" class="job-selection" name="job-selection" data-ignored="true" data-key="@jobKey" value="@jobKey"/>@jobKey
+                }
+                else
+                {
+                    <input type="checkbox" class="job-selection" name="job-selection" data-ignored="false" checked="checked" data-key="@jobKey" value="@jobKey"/>@jobKey
+                }
+            </label>
         }
     </div>
     <div id="calendar" class="span7">

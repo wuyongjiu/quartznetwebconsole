@@ -69,6 +69,7 @@
     <Compile Include="AccessControl\AclListBuilder.cs" />
     <Compile Include="EmbeddedStaticContentConventionBuilder.cs" />
     <Compile Include="Modules\UserZoneService.cs" />
+    <Compile Include="QuartzConsoleStarter.cs" />
     <Compile Include="VewModels\QuartzConsole\JobGroupViewModel.cs" />
     <Compile Include="VewModels\QuartzConsole\JobViewModel.cs" />
     <Compile Include="VewModels\QuartzConsole\JobListViewModel.cs" />

@@ -80,7 +80,7 @@ namespace QuartzNet.WebConsole.Modules
                                    select jobKey.ToString()
                                ).ToList();
 
-                    return View["Schedule", new {jobs}];
+                    return View["Schedule", new { jobs, ignoredSchedules = QuartzConsoleBootstrapper.IgnoredScheduleSet}];
                 };
             Post["/ScheduleJson"] = p =>
                 {

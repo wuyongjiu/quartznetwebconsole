@@ -1,7 +1,7 @@
 ﻿#region
 
 using System;
-using System.Configuration;
+using System.Collections.Generic;
 using System.Reflection;
 using Common.Logging;
 using Nancy;
@@ -27,8 +27,13 @@ namespace QuartzNet.WebConsole
         private static readonly ILog Log = LogManager.GetLogger<QuartzConsoleBootstrapper>();
         public static NancyHost StartDefault(ISchedulerFactory factory)
         {
+            return QuartzConsoleStarter.Configure.UsingSchedulerFactory(factory).HostedOnDefault().Start();
+        }
+
+        public static NancyHost Start(ISchedulerFactory factory, Uri hostUrl, ISet<string> ignoredScheduleSet)
+        {
             Factory = factory;
-            var hostUrl = new Uri(ConfigurationManager.AppSettings["quartznet.webconsole.host"] ?? "http://localhost:1234");
+            IgnoredScheduleSet = ignoredScheduleSet;
             var defaultNancyBootstrapper = new QuartzConsoleBootstrapper();
             var nancyHost = new NancyHost(hostUrl, defaultNancyBootstrapper);
             nancyHost.Start();
@@ -36,7 +41,9 @@ namespace QuartzNet.WebConsole
             return nancyHost;
         }
 
-        public static ISchedulerFactory Factory;
+        internal static ISet<string> IgnoredScheduleSet { get; set; }
+
+        internal static ISchedulerFactory Factory;
 
 
         private static readonly Assembly QuartzAssembly;
@@ -78,9 +85,12 @@ namespace QuartzNet.WebConsole
             nancyConventions.StaticContentsConventions.Add(
                 EmbeddedStaticContentConventionBuilder.AddDirectory("/Content", QuartzAssembly));
         }
-          protected override DiagnosticsConfiguration DiagnosticsConfiguration
+
+#if DEBUG 
+        protected override DiagnosticsConfiguration DiagnosticsConfiguration
         {
             get { return new DiagnosticsConfiguration(){Password = "quartz"}; }
         }
+#endif        
     }
 }
