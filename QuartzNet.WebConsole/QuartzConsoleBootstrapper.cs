@@ -30,7 +30,7 @@ namespace QuartzNet.WebConsole
             return QuartzConsoleStarter.Configure.UsingSchedulerFactory(factory).HostedOnDefault().Start();
         }
 
-        public static NancyHost Start(ISchedulerFactory factory, Uri hostUrl, ISet<string> ignoredScheduleSet)
+        internal static NancyHost Start(ISchedulerFactory factory, Uri hostUrl, ISet<string> ignoredScheduleSet)
         {
             Factory = factory;
             IgnoredScheduleSet = ignoredScheduleSet;
